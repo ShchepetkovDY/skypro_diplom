@@ -1,0 +1,81 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: sermalenk/skypro-front:lesson-34
+    container_name: frontend
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      api:
+        condition: service_started
+
+
+  api:
+    # Сборка образа для сервиса django из текущей директории
+    build: .
+    container_name: api
+    command: python manage.py runserver 0.0.0.0:8000
+    #env_file: .env.test
+    environment:
+      DB_HOST: pgdb
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+#      SOCIAL_AUTH_VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+#      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
+    restart: always
+    depends_on:
+      pgdb:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+
+#  migrations:
+#    build:
+#      context: .
+#    container_name: migrations
+#    environment:
+#      DB_HOST: pgdb
+#      DB_PORT: 5432
+#      DB_NAME: ${DB_NAME}
+#      DB_USER: ${DB_USER}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#    depends_on:
+#      api:
+#        condition: service_started
+#      pgdb:
+#        condition: service_healthy
+#    command: python manage.py migrate
+
+  pgdb:
+    # Использование готового образа postgres
+    image: postgres:15.2
+    # Задание переменных окружения для контейнера с postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: always
+     # Задание имени контейнера для сервиса pgdb
+    container_name: pgdb
+     # Связывание тома с директорией в контейнере для сохранения данных postgres
+    volumes:
+      - pgdb_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  pgdb_data:
