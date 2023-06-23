@@ -21,10 +21,10 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
           logout: true
 
-#      - name: Build and Push Container
-#        run: |-
-#          docker build -t dshchepetkov/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
-#          docker push dshchepetkov/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+      - name: Build and Push Container
+        run: |-
+          docker build -t dshchepetkov/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+          docker push dshchepetkov/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
 #
 #  deploy:
 #    needs: build_and_push
