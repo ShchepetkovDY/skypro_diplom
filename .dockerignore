@@ -10,5 +10,5 @@
 !manage.py
 !requirements.txt
 !Dockerfile
-!.env.dev
+!.env.prod
 !entrypoint.sh
