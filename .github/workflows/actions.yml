@@ -25,42 +25,42 @@ jobs:
         run: |-
           docker build -t dshchepetkov/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
           docker push dshchepetkov/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-#
-#  deploy:
-#    needs: build_and_push
-#    runs-on: ubuntu-20.04
-#    env:
-#      DB_NAME: ${{secrets.DB_NAME}}
-#      DB_USER: ${{secrets.DB_USER}}
-#      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-#      SECRET_KEY: ${{secrets.SECRET_KEY}}
-#      DEBUG: ${{secrets.DEBUG}}
-##      SOCIAL_AUTH_VK_OAUTH2_KEY: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_KEY}}
-##      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET}}
-##      BOT_TOKEN: ${{secrets.BOT_TOKEN}}
-#    steps:
-#      - name: Clone Code
-#        uses: actions/checkout@v3.5.2
-#
-#      - name: Render configs
-#        run: |-
-#          mkdir deploy
-#          cat docker-compose-ci.yml | envsubst > deploy/docker-compose.yaml
-#
-#      # ========= BEGIN SSH EXIT ==========
-#      - name: Clone files to server
-#        uses: appleboy/scp-action@v0.1.4
-#        with:
-#          # Эти значения надо вписать в секреты гитхаба
-#          host: ${{ secrets.HOST }}
-#          port: ${{ secrets.PORT }}
-#          username: ${{ secrets.SSH_USERNAME }}
-#          password: ${{ secrets.SSH_PASSWORD }}
-#          # Указываем, какие файлы копировать
-#          source: "deploy/docker-compose.yaml"
-#          target: "deploy"
-#          strip_components: 1
-#
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-20.04
+    env:
+      DB_NAME: ${{secrets.DB_NAME}}
+      DB_USER: ${{secrets.DB_USER}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      DEBUG: ${{secrets.DEBUG}}
+#      SOCIAL_AUTH_VK_OAUTH2_KEY: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_KEY}}
+#      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET}}
+#      BOT_TOKEN: ${{secrets.BOT_TOKEN}}
+    steps:
+      - name: Clone Code
+        uses: actions/checkout@v3.5.2
+
+      - name: Render configs
+        run: |-
+          mkdir deploy
+          cat docker-compose-ci.yml | envsubst > deploy/docker-compose.yaml
+
+      # ========= BEGIN SSH EXIT ==========
+      - name: Clone files to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          # Эти значения надо вписать в секреты гитхаба
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          # Указываем, какие файлы копировать
+          source: "deploy/docker-compose.yaml"
+          target: "deploy"
+          strip_components: 1
+
 #      # ========== START DOCKER CONTAINER ==========
 #      - name: Executing remote SSH commands using PASSWORD
 #        uses: appleboy/ssh-action@v0.1.10
