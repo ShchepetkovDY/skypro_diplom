@@ -35,8 +35,8 @@ jobs:
       DB_PASSWORD: ${{secrets.DB_PASSWORD}}
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       DEBUG: ${{secrets.DEBUG}}
-#      SOCIAL_AUTH_VK_OAUTH2_KEY: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_KEY}}
-#      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET}}
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_KEY}}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET}}
 #      BOT_TOKEN: ${{secrets.BOT_TOKEN}}
     steps:
       - name: Clone Code
@@ -74,12 +74,12 @@ jobs:
             cd deploy
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
 
-#      # ========= REMOVING INACTIVE IMAGES ============
-#      - name: Removing Images
-#        uses: appleboy/ssh-action@v0.1.10
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.SSH_USERNAME }}
-#          password: ${{ secrets.SSH_PASSWORD }}
-#          script: |
-#            docker system prune -a -f
+      # ========= REMOVING INACTIVE IMAGES ============
+      - name: Removing Images
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            docker system prune -a -f
