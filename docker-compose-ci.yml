@@ -25,8 +25,8 @@ services:
       retries: 15
 
   api:
-    #build: .
-    image: dshchepetkov/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    build: .
+    #image: dshchepetkov/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: api
     command: gunicorn todolist.wsgi:application --bind 0.0.0.0:8000
     #env_file: .env.prod
@@ -67,7 +67,7 @@ services:
 #    command: python manage.py runbot
 
   frontend:
-    image: sermalenk/skypro-front:lesson-36
+    image: sermalenk/skypro-front:lesson-37
     container_name: frontend
     restart: always
     ports:
