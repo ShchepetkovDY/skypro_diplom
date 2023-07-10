@@ -50,7 +50,7 @@ services:
       - .:/app
 
   bot:
-    #build: .
+#    build: .
     image: dshchepetkov/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: bot
     restart: always
