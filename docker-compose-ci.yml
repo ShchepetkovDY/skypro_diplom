@@ -25,7 +25,7 @@ services:
       retries: 15
 
   api:
-    #build: .
+#    build: .
     image: dshchepetkov/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
     container_name: api
     command: gunicorn todolist.wsgi:application --bind 0.0.0.0:8000
@@ -49,25 +49,25 @@ services:
     volumes:
       - .:/app
 
-#  bot:
-##    build: .
-#    image: dshchepetkov/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
-#    container_name: bot
-#    restart: always
-#    environment:
-#      SQL_DB_HOST: pgdb
-#      SQL_DB_PORT: 5432
-#      SQL_DB_NAME: ${SQL_DB_NAME}
-#      SQL_DB_USER: ${SQL_DB_USER}
-#      SQL_DB_PASSWORD: ${SQL_DB_PASSWORD}
-#      BOT_TOKEN: ${BOT_TOKEN}
-#    depends_on:
-#      pgdb:
-#        condition: service_healthy
-#    command: python manage.py runbot
+  bot:
+    #build: .
+    image: dshchepetkov/todolist:${GITHUB_REF_NAME}-${GITHUB_RUN_ID}
+    container_name: bot
+    restart: always
+    environment:
+      DB_HOST: pgdb
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      BOT_TOKEN: ${BOT_TOKEN}
+    depends_on:
+      pgdb:
+        condition: service_healthy
+    command: python manage.py runbot
 
   frontend:
-    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     container_name: frontend
     restart: always
     ports:

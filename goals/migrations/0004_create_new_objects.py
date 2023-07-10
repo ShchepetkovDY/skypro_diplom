@@ -1,6 +1,7 @@
 from django.db import migrations, transaction
 from django.utils import timezone
 
+
 def create_objects(apps, schema_editor):
     # Для загрузки кода моделей используется специальный метод apps.get_model
     # Он позволяет загрузить ровно то состояние модели, которое было на момент применения этой миграции
@@ -11,6 +12,9 @@ def create_objects(apps, schema_editor):
     Board = apps.get_model("goals", "Board")
     BoardParticipant = apps.get_model("goals", "BoardParticipant")
     GoalCategory = apps.get_model("goals", "GoalCategory")
+
+    now = timezone.now()  # переменная, чтобы дата создания совпадала с датой обновления, причем как у доски, так и
+    # у участников
 
     with transaction.atomic():  # Применяем все изменения одной транзакцией
         for user in User.objects.all():  # Для каждого пользователя
@@ -23,8 +27,8 @@ def create_objects(apps, schema_editor):
                 user=user,
                 board=new_board,
                 role=1,  # Владелец, проставляем числом, не импортируем код по той же причине
-                created=timezone.now(),
-                updated=timezone.now()
+                created=now,
+                updated=now
             )
 
             # проставляем всем категориям пользователя его доску
@@ -32,7 +36,6 @@ def create_objects(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('goals', '0003_board_goalcategory_board_boardparticipant'),
     ]
