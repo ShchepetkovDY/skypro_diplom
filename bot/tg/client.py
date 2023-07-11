@@ -19,8 +19,14 @@ class TgClient:
                                          "allowed_updates": ["update_id", "message"]})
         return GetUpdatesResponse.Schema().load(resp.json())
 
+    # def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
+    #     """ Получение пользователем сообщений от бота """
+    #     url = self.get_url("sendMessage")
+    #     resp = requests.post(url, params={"chat_id": chat_id, "text": text})
+    #     return SendMessageResponse.Schema().load(resp.json())
+
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         """ Получение пользователем сообщений от бота """
         url = self.get_url("sendMessage")
-        resp = requests.post(url, params={"chat_id": chat_id, "text": text})
-        return SendMessageResponse.Schema().load(resp.json())
+        resp = requests.post(url, params={"chat_id": chat_id, "text": text}).json()
+        return SendMessageResponse(**resp)

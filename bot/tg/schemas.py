@@ -47,7 +47,7 @@ class Message:
 class UpdateObj:
     """ Обновить объект """
     update_id: int
-    message: Message
+    message: Message = "{}"
 
     class Meta:
         unknown = EXCLUDE
